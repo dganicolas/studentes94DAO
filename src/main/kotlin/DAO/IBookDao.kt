@@ -4,9 +4,9 @@ import org.example.DAO.Book
 import java.util.*
 
 interface IBookDAO {
-    fun create(book: Book): Book?
+    fun insert(book: Book): Book?
     fun getAll(): List<Book>?
-    fun getById(titulo: String): Book?
+    fun selectById(id: Int): Book?
     fun update(book: Book): Book?
-    fun delete(titulo:String): Boolean
+    fun deleteById(id:Int): Boolean
 }

@@ -1,22 +1,23 @@
 import DAO.IBookDAO
 import org.example.DAO.Book
+import org.example.consola.Iconsola
 import java.sql.SQLException
-import java.util.*
 import javax.sql.DataSource
 
-class UserDAOH2(
+class BookDaoDB(
     private val dataSource: DataSource,
     private val consola: Iconsola
 ) : IBookDAO {
 
-    override fun create(book: Book): Book? {
-        val sql = "INSERT INTO Book (titulo, autor, anopublicacion) VALUES (?, ?, ?)"
+    override fun insert(book: Book): Book? {
+        val sql = "INSERT INTO Book (id,titulo, autor, anopublicacion) VALUES (?,?, ?, ?)"
         return try {
             dataSource.connection.use { conn ->
                 conn.prepareStatement(sql).use { stmt ->
-                    stmt.setString(1, book.titulo)
-                    stmt.setString(2, book.autor)
-                    stmt.setString(3, book.anoPublicacion.toString())
+                    stmt.setInt(1,book.ID)
+                    stmt.setString(2, book.titulo)
+                    stmt.setString(3, book.autor)
+                    stmt.setString(4, book.anoPublicacion.toString())
                     val rs = stmt.executeUpdate()
                     if (rs == 1) {
                         book
@@ -27,23 +28,25 @@ class UserDAOH2(
                 }
             }
         } catch (e: SQLException) {
-            consola.showMessage("error* insert query failed! (${e.message})")
+            consola.showMessage("1 :error* insert query failed! (${e.message})")
             null
         }
     }
 
-    override fun getById(titulo: String): Book? {
-        val sql = "SELECT * FROM Book WHERE titulo = ?"
+    override fun selectById(id: Int): Book? {
+        val sql = "SELECT * FROM Book WHERE id = ?"
         return try {
             dataSource.connection.use { conn ->
                 conn.prepareStatement(sql).use { stmt ->
-                    stmt.setString(1, titulo)
+                    stmt.setString(1, id.toString())
                     val rs = stmt.executeQuery()
                     if (rs.next()) {
                         Book(
-                            titulo = rs.getString(rs.getString("id")),
-                            autor = rs.getString("name"),
-                            anoPublicacion = rs.getString("email").toInt()
+                            ID = rs.getInt("ID"),
+                            titulo = rs.getString("titulo"),
+                            autor = rs.getString("autor"),
+                            anoPublicacion = rs.getInt("anopublicacion"),
+                            estado = rs.getBoolean("estado")
                         )
                     } else {
                         null
@@ -51,7 +54,7 @@ class UserDAOH2(
                 }
             }
         } catch (e: SQLException) {
-            consola.showMessage("error* insert query failed! (${e.message})")
+            consola.showMessage("3: error* insert query failed! (${e.message})")
             null
         }
     }
@@ -62,36 +65,40 @@ class UserDAOH2(
             dataSource.connection.use { conn ->
                 conn.prepareStatement(sql).use { stmt ->
                     val rs = stmt.executeQuery()
-                    val users = mutableListOf<Book>()
+                    val libro = mutableListOf<Book>()
                     while (rs.next()) {
-                        users.add(
+                        libro.add(
                             Book(
-                                titulo = rs.getString(rs.getString("id")),
-                                autor = rs.getString("name"),
-                                anoPublicacion = rs.getString("email").toInt()
+                                ID = rs.getInt("ID"),
+                                titulo = rs.getString("titulo"),
+                                autor = rs.getString("autor"),
+                                anoPublicacion = rs.getInt("anopublicacion"),
+                                estado = rs.getBoolean("estado")
                             )
                         )
                     }
-                    users
+                    libro
                 }
             }
         } catch (e: SQLException) {
-            consola.showMessage("error* insert query failed! (${e.message})")
+            consola.showMessage("5:  error* insert query failed! (${e.message})")
             null
         }
     }
 
-    override fun update(book: Book): Book? {
-        val sql = "UPDATE tuser SET autor = ?, anopublicacion = ? WHERE titulo = ?"
+    override fun update(libro: Book): Book? {
+        val sql = "UPDATE book SET autor = ?, anopublicacion = ?, titulo = ?, estado = ? WHERE id = ?"
         return try {
             dataSource.connection.use { conn ->
                 conn.prepareStatement(sql).use { stmt ->
-                    stmt.setString(1, book.autor)
-                    stmt.setString(2, book.anoPublicacion.toString())
-                    stmt.setString(3, book.titulo)
+                    stmt.setString(1, libro.autor)
+                    stmt.setInt(2, libro.anoPublicacion)
+                    stmt.setString(3, libro.titulo)
+                    stmt.setBoolean(4,libro.estado)
+                    stmt.setInt(5, libro.ID)
                     val rs = stmt.executeUpdate()
                     if (rs == 1) {
-                        book
+                        libro
                     } else {
                         consola.showMessage("error insert query failed! ($rs records inserted)")
                         null
@@ -99,22 +106,22 @@ class UserDAOH2(
                 }
             }
         } catch (e: SQLException) {
-            consola.showMessage("error* insert query failed! (${e.message})")
+            consola.showMessage("6: error* insert query failed! (${e.message})")
             null
         }
     }
 
-    override fun delete(titulo: String): Boolean {
-        val sql = "DELETE FROM book WHERE titulo = ?"
+    override fun deleteById(id: Int): Boolean {
+        val sql = "DELETE FROM book WHERE ID = ?"
         return try {
             dataSource.connection.use { conn ->
                 conn.prepareStatement(sql).use { stmt ->
-                    stmt.setString(1, titulo)
+                    stmt.setInt(1, id)
                     (stmt.executeUpdate() == 1)
                 }
             }
         } catch (e: SQLException) {
-            consola.showMessage("error* insert query failed! (${e.message})")
+            consola.showMessage("7: error* insert query failed! (${e.message})")
             false
         }
     }

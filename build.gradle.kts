@@ -20,6 +20,9 @@ dependencies {
 
 //DCS: Arregla el warning SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
     implementation("org.slf4j:slf4j-nop:2.0.6")
+
+    //chat gpt me lo dio nose si esta bien
+    implementation ("com.google.code.gson:gson:2.8.8")
 }
 
 tasks.test {
