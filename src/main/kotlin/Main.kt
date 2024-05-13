@@ -8,12 +8,11 @@ import org.example.consola.Consola
 fun main() {
     val consola = Consola()
     var libro1 = Book(1,"funcion lamdba","diego can",2012,false)
-
     val queTipoElegir = consola.elegirOpcion()
     val baseDeDatos = if(queTipoElegir == 1){
         DataSourceFactory.getDS(DataSourceFactory.DataSourceType.HIKARI)
     }else{
-        DataSourceFactory.getDS(DataSourceFactory.DataSourceType.HIKARI)
+        DataSourceFactory.getDS(DataSourceFactory.DataSourceType.JSON)
     }
 
     val bookDao =BookDaoDB(baseDeDatos,consola)
