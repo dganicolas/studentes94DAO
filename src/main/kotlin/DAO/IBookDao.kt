@@ -1,12 +1,11 @@
-package DAO
+package org.example.DAO
 
 import org.example.DAO.Book
-import java.util.*
 
-interface IBookDAO {
+interface IBookDao {
     fun insert(book: Book): Book?
-    fun getAll(): List<Book>?
     fun selectById(id: Int): Book?
-    fun update(book: Book): Book?
-    fun deleteById(id:Int): Boolean
+    fun getAll(): List<Book>?
+    fun update(libro: Book): Book?
+    fun deleteById(id: Int): Boolean
 }

@@ -2,7 +2,7 @@ package org.example.consola
 
 import org.example.DAO.Book
 
-class Consola : Iconsola {
+class Consola : IConsola {
 
     override fun showMessage(message:String, lineBreak:Boolean){
         if(lineBreak) println(message)

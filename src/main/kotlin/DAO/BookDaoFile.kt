@@ -1,11 +1,10 @@
 package org.example.DAO
 
-import DAO.IBookDAO
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
 import java.io.File
 
-class BookDaoFile: IBookDAO {
+class BookDaoFile: IBookDao {
     val gson =Gson()
     val file = File("data.json")
     val jsonString = file.readText()

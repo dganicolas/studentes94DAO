@@ -1,13 +1,13 @@
-import DAO.IBookDAO
 import org.example.DAO.Book
-import org.example.consola.Iconsola
+import org.example.DAO.IBookDao
+import org.example.consola.IConsola
 import java.sql.SQLException
 import javax.sql.DataSource
 
 class BookDaoDB(
     private val dataSource: DataSource,
-    private val consola: Iconsola
-) : IBookDAO {
+    private val consola: IConsola
+) : IBookDao {
 
     override fun insert(book: Book): Book? {
         val sql = "INSERT INTO Book (id,titulo, autor, anopublicacion) VALUES (?,?, ?, ?)"
